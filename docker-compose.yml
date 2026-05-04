@@ -1,0 +1,51 @@
+services:
+
+  gateway:
+    build: ./gateway
+    ports:
+      - "4000:3000"
+    depends_on:
+      - user-service
+      - booking-service
+      - recommendation-service
+      - mongodb
+    networks:
+      - smart-net
+
+  user-service:
+    build: ./services/user-service
+    expose:
+      - "3001"
+    networks:
+      - smart-net
+
+  booking-service:
+    build: ./services/booking-service
+    expose:
+      - "3002"
+    networks:
+      - smart-net
+
+  recommendation-service:
+    build: ./services/recommendation-service
+    expose:
+      - "3003"
+    networks:
+      - smart-net
+
+  mongodb:
+    image: mongo:6
+    container_name: smart-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - smart-net
+
+networks:
+  smart-net:
+    driver: bridge
+
+volumes:
+  mongo-data:

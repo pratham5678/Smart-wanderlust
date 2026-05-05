@@ -2,9 +2,28 @@ pipeline {
     agent any
 
     stages {
-        stage('Run Project') {
+
+        stage('Pull Code') {
             steps {
-                sh 'docker-compose up -d --build'
+                checkout scm
+            }
+        }
+
+        stage('Build Docker Images') {
+            steps {
+                sh 'docker-compose build'
+            }
+        }
+
+        stage('Run Containers') {
+            steps {
+                sh 'docker-compose up -d'
+            }
+        }
+
+        stage('Check Running Containers') {
+            steps {
+                sh 'docker ps'
             }
         }
     }

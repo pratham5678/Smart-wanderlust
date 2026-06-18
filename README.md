@@ -61,8 +61,183 @@ Smart-wanderlust/
 ├── package-lock.json
 └── README.md
 ```
+# 🚀 How to Run This Project
+
+## 1. Clone the Repository
+
+```bash
+git clone https://github.com/pratham5678/Smart-wanderlust.git
+
+cd Smart-wanderlust
+```
 
 ---
+
+## 2. Install Dependencies
+
+Install dependencies for each component.
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+```
+
+### Gateway
+
+```bash
+cd ../gateway
+npm install
+```
+
+### User Service
+
+```bash
+cd ../services/user-service
+npm install
+```
+
+### Booking Service
+
+```bash
+cd ../booking-service
+npm install
+```
+
+### Recommendation Service
+
+```bash
+cd ../recommendation-service
+npm install
+```
+
+---
+
+## 3. Start MongoDB
+
+Ensure MongoDB is running locally or inside Docker.
+
+---
+
+## 4. Run with Docker Compose (Recommended)
+
+```bash
+docker-compose up --build
+```
+
+This starts all required services automatically.
+
+---
+
+## 5. Run with Kubernetes
+
+Start Minikube:
+
+```bash
+minikube start
+```
+
+Deploy all Kubernetes resources:
+
+```bash
+kubectl apply -f k8s/
+```
+
+Check pods:
+
+```bash
+kubectl get pods
+```
+
+Check services:
+
+```bash
+kubectl get svc
+```
+
+---
+
+## 6. Verify Monitoring
+
+### Prometheus
+
+Port-forward Prometheus:
+
+```bash
+kubectl port-forward -n monitoring svc/prometheus-server 9090:80
+```
+
+Open:
+
+```
+http://localhost:9090
+```
+
+Search metrics such as:
+
+```
+gateway_requests_total
+booking_created_total
+recommendation_requests_total
+```
+
+---
+
+### Grafana
+
+Port-forward Grafana:
+
+```bash
+kubectl port-forward -n monitoring svc/grafana 3000:80
+```
+
+Open:
+
+```
+http://localhost:3000
+```
+
+Login with your Grafana credentials and import or create dashboards using Prometheus as the data source.
+
+---
+
+## 7. Verify Services
+
+Check that the metrics endpoints are accessible:
+
+```
+http://localhost:3000/metrics
+http://localhost:3001/metrics
+http://localhost:3002/metrics
+http://localhost:3003/metrics
+```
+
+---
+
+## Prerequisites
+
+* Node.js 18+
+* npm
+* Docker
+* Kubernetes (Minikube)
+* kubectl
+* Helm
+* MongoDB
+* Git
+
+---
+
+## Repository
+
+```
+git clone https://github.com/pratham5678/Smart-wanderlust.git
+```
+
+After cloning and following the above steps, the complete Smart Wanderlust cloud-native application can be deployed with monitoring using Prometheus and Grafana.
+
+---
+
 
 ## 🏗️ Architecture
 

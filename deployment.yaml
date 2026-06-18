@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: smart-wanderlust
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: smart-wanderlust
+  template:
+    metadata:
+      labels:
+        app: smart-wanderlust
+    spec:
+      containers:
+      - name: smart-wanderlust
+        image: YOUR_DOCKERHUB_USERNAME/smart-wanderlust:latest
+        ports:
+        - containerPort: 3000

@@ -1,65 +1,122 @@
-import { useState } from "react";
-import axios from "axios";
+import React, { useState } from "react";
+
+const BASE_URL = "http://192.168.49.2:30002";
 
 function App() {
-  const [user, setUser] = useState("");
-  const [booking, setBooking] = useState("");
-  const [recommend, setRecommend] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [bookings, setBookings] = useState([]);
+  const [recommendations, setRecommendations] = useState([]);
 
-  const getUsers = async () => {
-    setLoading(true);
-    try {
-      const res = await axios.get("http://localhost:3000/users");
-      setUser(res.data);
-    } catch {
-      setUser("Error fetching users");
-    }
-    setLoading(false);
+  // 🔥 SAFE PARSER (handles array OR {data: []})
+  const extractData = (response) => {
+    return Array.isArray(response) ? response : response?.data || [];
   };
 
-  const getBooking = async () => {
-    setLoading(true);
+  // ================= USERS =================
+  const loadUsers = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/booking");
-      setBooking(res.data);
-    } catch {
-      setBooking("Error fetching booking");
+      const res = await fetch(`${BASE_URL}/api/users`);
+      const data = await res.json();
+
+      const clean = extractData(data);
+      console.log("Users:", clean);
+
+      setUsers(clean);
+    } catch (err) {
+      console.error("Users error:", err);
     }
-    setLoading(false);
   };
 
-  const getRecommend = async () => {
-    setLoading(true);
+  // ================= BOOKINGS =================
+  const loadBookings = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/recommend");
-      setRecommend(JSON.stringify(res.data));
-    } catch {
-      setRecommend("Error fetching recommendations");
+      const res = await fetch(`${BASE_URL}/api/bookings`);
+      const data = await res.json();
+
+      const clean = extractData(data);
+      console.log("Bookings:", clean);
+
+      setBookings(clean);
+    } catch (err) {
+      console.error("Bookings error:", err);
     }
-    setLoading(false);
+  };
+
+  // ================= RECOMMENDATIONS =================
+  const loadRecommendations = async () => {
+    try {
+      const res = await fetch(`${BASE_URL}/api/recommendations`);
+      const data = await res.json();
+
+      const clean = extractData(data);
+      console.log("Recommendations:", clean);
+
+      setRecommendations(clean);
+    } catch (err) {
+      console.error("Recommendations error:", err);
+    }
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>Smart Wanderlust 🌍</h1>
+    <div style={{ padding: "20px", fontFamily: "Arial" }}>
+      <h1>Smart Wanderlust Dashboard</h1>
 
-      {loading && <p>Loading...</p>}
+      {/* Buttons */}
+      <div style={{ marginBottom: "20px" }}>
+        <button onClick={loadUsers} style={{ marginRight: "10px" }}>
+          Load Users
+        </button>
 
-      <div>
-        <button onClick={getUsers}>Load Users</button>
-        <p>{user}</p>
+        <button onClick={loadBookings} style={{ marginRight: "10px" }}>
+          Load Bookings
+        </button>
+
+        <button onClick={loadRecommendations}>
+          Load Recommendations
+        </button>
       </div>
 
-      <div>
-        <button onClick={getBooking}>Load Booking</button>
-        <p>{booking}</p>
-      </div>
+      {/* USERS */}
+      <h2>Users</h2>
+      {users.length > 0 ? (
+        <ul>
+          {users.map((u, i) => (
+            <li key={i}>
+              {JSON.stringify(u)}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No users loaded</p>
+      )}
 
-      <div>
-        <button onClick={getRecommend}>Get Recommendations</button>
-        <p>{recommend}</p>
-      </div>
+      {/* BOOKINGS */}
+      <h2>Bookings</h2>
+      {bookings.length > 0 ? (
+        <ul>
+          {bookings.map((b, i) => (
+            <li key={i}>
+              {JSON.stringify(b)}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No bookings loaded</p>
+      )}
+
+      {/* RECOMMENDATIONS */}
+      <h2>Recommendations</h2>
+      {recommendations.length > 0 ? (
+        <ul>
+          {recommendations.map((r, i) => (
+            <li key={i}>
+              {JSON.stringify(r)}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No recommendations loaded</p>
+      )}
     </div>
   );
 }
